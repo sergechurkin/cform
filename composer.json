@@ -2,7 +2,7 @@
     "name": "sergechurkin/cform",
     "description": "Web Forms lib for test job Guestbook & simple php progects",
     "keywords": ["form", "table", "captcha", "Guestbook", "test job"],
-    "type": "Class library",
+    "type": "library",
     "license": "BSD-3-Clause",
     "require": {
         "php": ">=5.4.0"
@@ -19,5 +19,10 @@
     ],
     "autoload": {
         "psr-4": { "sergechurkin\\cform\\": "src/" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
     }
 }
