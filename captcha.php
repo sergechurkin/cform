@@ -2,7 +2,7 @@
 
 namespace sergechurkin\cform;
 
-class captcha
+class Captcha
 {
     public function generatecaptcha() {
         $letters = 'ABCDEFGKIJKLMNOPQRSTUVWXYZ';

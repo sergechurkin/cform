@@ -2,7 +2,7 @@
 
 namespace sergechurkin\cform;
 
-class cform
+class cForm
 {
     public function bldHeader($tytle) {
         echo '<!DOCTYPE html>' . "\n";
