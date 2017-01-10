@@ -4,13 +4,15 @@ namespace sergechurkin\cform;
 
 class cForm
 {
+    public $dircss = './css/';
+
     public function bldHeader($tytle) {
         echo '<!DOCTYPE html>' . "\n";
         echo '<html lang="ru">' . "\n";
         echo '<head>' . "\n";
         echo '<meta http-equiv="content-type" content="text/html; charset=utf-8" />' . "\n";
         echo '<title>' . $tytle . '</title>' . "\n";
-        echo '<link href="./css/bootstrap.css" rel="stylesheet">' . "\n";
+        echo '<link href="' . $this->dircss . 'bootstrap.css" rel="stylesheet">' . "\n";
         echo '</head>' . "\n";
         echo '<body>' . "\n";
         
@@ -24,29 +26,29 @@ class cForm
      * $menuridht = ['Имя', 'class(active)', 'url'];
      */
     public function bldMenu($menu, $menuridht) {
-        echo '<nav role="navigation" class="navbar navbar-default">                                                '."\n";
-        echo '  <!-- Brand and toggle get grouped for better mobile display -->                                    '."\n";
-        echo '  <div class="navbar-header">                                                                        '."\n";
+        echo '<nav role="navigation" class="navbar navbar-default">'."\n";
+        echo '  <!-- Brand and toggle get grouped for better mobile display -->'."\n";
+        echo '  <div class="navbar-header">'."\n";
         echo '    <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">'."\n";
-        echo '      <span class="sr-only">Toggle navigation</span>                                                 '."\n";
-        echo '      <span class="icon-bar"></span>                                                                 '."\n";
-        echo '      <span class="icon-bar"></span>                                                                 '."\n";
-        echo '      <span class="icon-bar"></span>                                                                 '."\n";
-        echo '    </button>                                                                                        '."\n";
-        /*echo '    <a href="#" class="navbar-brand">Бренд</a>                                                       '."\n";*/
-        echo '  </div>                                                                                             '."\n";
-        echo '  <!-- Collection of nav links, forms, and other content for toggling -->                            '."\n";
-        echo '  <div id="navbarCollapse" class="collapse navbar-collapse">                                         '."\n";
-        echo '    <ul class="nav navbar-nav">                                                                      '."\n";
+        echo '      <span class="sr-only">Toggle navigation</span>'."\n";
+        echo '      <span class="icon-bar"></span>'."\n";
+        echo '      <span class="icon-bar"></span>'."\n";
+        echo '      <span class="icon-bar"></span>'."\n";
+        echo '    </button>'."\n";
+        echo '    <a href="./" class="navbar-brand">Мой сайт</a>'."\n";
+        echo '  </div>'."\n";
+        echo '  <!-- Collection of nav links, forms, and other content for toggling -->'."\n";
+        echo '  <div id="navbarCollapse" class="collapse navbar-collapse">'."\n";
+        echo '    <ul class="nav navbar-nav">'."\n";
         foreach($menu as $key=>$m) {
-            echo '<li class="' . $m[1] . '"><a href="' . $m[2] . '">' . $m[0] . '</a></li>                                                '."\n";
+            echo '<li class="' . $m[1] . '"><a href="' . $m[2] . '">' . $m[0] . '</a></li>'."\n";
         }
-        echo '    </ul>                                                                                            '."\n";
-        echo '    <ul class="nav navbar-nav navbar-right">                                                         '."\n";
-        echo '<li class="' . $menuridht[1] . '"><a href="' . $menuridht[2] . '">' . $menuridht[0] . '</a></li>                                                '."\n";
-        echo '    </ul>                                                                                            '."\n";
-        echo '  </div>                                                                                             '."\n";
-        echo '</nav>                                                                                               '."\n";
+        echo '    </ul>'."\n";
+        echo '    <ul class="nav navbar-nav navbar-right">'."\n";
+        echo '<li class="' . $menuridht[1] . '"><a href="' . $menuridht[2] . '">' . $menuridht[0] . '</a></li>'."\n";
+        echo '    </ul>'."\n";
+        echo '  </div>'."\n";
+        echo '</nav>'."\n";
     }
     /*
      * $fields[]  = [lsbel, lsbelwidth, name, namewidth, type, value, errormessage, readonly]
@@ -88,7 +90,11 @@ class cForm
         }
         echo '<div class="btn-toolbar" role="toolbar">'."\n";
         foreach ($buttons as $key=>$button) {
-            echo '<button type = "' . $button[1] . '" class = "' . $button[2] . '" onclick = "document.location.href=\'' . $button[3] . '\';">' . $button[0] . '</button>'."\n";
+            if ($button[1] !== 'submit') {
+                echo '<button type = "' . $button[1] . '" class = "' . $button[2] . '" onclick = "document.location.href=\'' . $button[3] . '\';">' . $button[0] . '</button>'."\n";
+            } else {
+                echo '<button type = "' . $button[1] . '" class = "' . $button[2] . '" >' . $button[0] . '</button>'."\n";
+            }
         }
         echo '</div>'."\n";
         echo '     </form>'."\n";
@@ -103,7 +109,9 @@ class cForm
      * $fields[]  = [['Имя', 'name',],...];
      * $buttons[] = ['Отмена', 'button', 'btn btn-default', './'];
      */
-    public function bldTable($tytle, $tytleform, $width, $fields, $rows, $buttons, $count_entrys, $entry_on_page, $current_page, $max_pages_list) {
+    public function bldTable($tytle, $tytleform, $width, $fields, $rows, $buttons, 
+                             $count_entrys, $entry_on_page, $current_page, $max_pages_list,
+                             $numup, $numto) {
         $widthlr = (12 - $width) / 2;
         echo '<div class="container">' . "\n";
         echo ' <div class="row row-offcanvas row-offcanvas-center">' . "\n";
@@ -117,7 +125,11 @@ class cForm
         echo '    <div class="panel-body">' . "\n";
 
         $this->bldPaginator($count_entrys, $entry_on_page, $current_page, $max_pages_list);
-
+        if ($numup !== $numto) {
+            echo 'Строки с ' . $numup . ' по ' . $numto . ' всего ' . $count_entrys . "\n";
+        } else {
+            echo 'Строка ' . $numup . ' всего ' . $count_entrys . "\n";
+        }
         echo '<table class="table table-striped table-bordered">' . "\n";
         echo '<thead>' . "\n";
         echo '<tr>' . "\n";
@@ -146,7 +158,6 @@ class cForm
      * $fields[]  = [['Имя', 'name',],...];
      * $buttons[] = ['Отмена', 'button', 'btn btn-default', './'];
      */
-
     public function bldPaginator($count_entrys, $entry_on_page, $current_page, $max_pages_list) {
         echo '<nav aria-label = "Page navigation">' . "\n";
         echo '<ul class = "pagination">' . "\n";
@@ -171,17 +182,9 @@ class cForm
         $last_page = $first_page + $max_pages_list - 1;
         if ($last_page > $count_pages)
             $last_page = $count_pages;
-/*
-        if ($first_page != 1)
-            echo '< |';
-*/
         for ($i = $first_page; $i <= $last_page; $i++) {
             echo '<li ' . (($i == $current_page) ? 'class="active"' : '') . '><a href="' . './?current_page=' . $i . '">' . $i . '</a></li>' . "\n";
         }
-/*
-        if ($last_page < $count_pages)
-            echo ' >';
- */
         echo '<li>' . "\n";
         echo '<a href = "' . './?current_page=' . $count_pages . '" aria-label = "Next">' . "\n";
         echo '<span aria-hidden = "true">&raquo;' . "\n";
