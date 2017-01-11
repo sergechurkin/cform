@@ -6,17 +6,25 @@
 Расширение опубликовано на
 [packagist](https://packagist.org/packages/s-churkin/cform)
 и может быть включено в проект. Если указать зависимость
-```
 
 ```
-то composer сгенерит автозагрузчик 
+    "require-dev": {
+        "php": ">=5.4.0",
+        "sergechurkin/cform": "1.1.x-dev"
+    },
+```
 
+то [composer](http://getcomposer.org/download/) сформирует автозагрузчик,
+который можно использовать в проекте:
+
+```
 $loader = require( __DIR__ . '/vendor/autoload.php' );
+```
 
 ## Installation
 
-Устанавливается с помощью [composer](http://getcomposer.org/download/).
+Библиотеку можно установить отдельно:
 
 ```
-composer require --prefer-dist sergechurkin/cform "1.0.x-dev"
+composer create-project sergechurkin/cform path "1.1.x-dev"
 ```
