@@ -3,8 +3,8 @@
 Библиотека для формирования WEB страничек (меню, формы, таблицы). 
 Пример использования в тестовом приложении
 [Гостевая книга](https://github.com/sergechurkin/guestbook).
-Расширение опубликовано на
-[packagist](https://packagist.org/packages/s-churkin/cform)
+Расширение зарегистрировано на
+[packagist](https://packagist.org/packages/sergechurkin/cform)
 и может быть включено в проект. Если указать зависимость
 
 ```
