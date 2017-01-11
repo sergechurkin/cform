@@ -5,6 +5,7 @@
     "type": "library",
     "license": "BSD-3-Clause",
     "minimum-stability": "stable",
+    "minimum-stability": "stable",
     "require": {
         "php": ">=5.4.0"
     },
