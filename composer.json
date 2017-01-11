@@ -1,7 +1,7 @@
 {
     "name": "sergechurkin/cform",
     "description": "Web Forms lib for test job Guestbook & simple php progects",
-    "keywords": ["form", "table", "captcha", "Guestbook", "test job"],
+    "keywords": ["form", "table", "captcha", "Guestbook", "git tag 1.1-dev"],
     "type": "library",
     "license": "BSD-3-Clause",
     "minimum-stability": "stable",
