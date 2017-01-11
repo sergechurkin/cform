@@ -5,7 +5,6 @@
     "type": "library",
     "license": "BSD-3-Clause",
     "minimum-stability": "stable",
-    "minimum-stability": "stable",
     "require": {
         "php": ">=5.4.0"
     },
@@ -21,10 +20,5 @@
     ],
     "autoload": {
         "psr-4": { "sergechurkin\\cform\\": "" }
-    }
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-        }
     }
 }
