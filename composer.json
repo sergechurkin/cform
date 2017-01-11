@@ -4,7 +4,8 @@
     "keywords": ["form", "table", "captcha", "Guestbook", "test job"],
     "type": "library",
     "license": "BSD-3-Clause",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
         "php": ">=5.4.0"
     },
