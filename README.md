@@ -23,8 +23,8 @@ $loader = require( __DIR__ . '/vendor/autoload.php' );
 
 ## Installation
 
-Библиотеку можно установить отдельно:
+Библиотеку можно установить отдельно в каталог vendor:
 
 ```
-composer create-project sergechurkin/cform path "1.1.x-dev"
+composer require sergechurkin/cform "1.1.x-dev"
 ```
