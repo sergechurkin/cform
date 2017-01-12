@@ -54,11 +54,13 @@ class cForm
      * $fields[]  = [lsbel, lsbelwidth, name, namewidth, type, value, errormessage, readonly]
      * $buttons[] = ['Отмена', 'button', 'btn btn-default', './'];
      */
-    public function bldForm( $tytle, $tytleform, $width, $fields, $buttons) {
+    public function bldForm( $tytle, $tytleform, $width, $fields, $buttons, $stringOnly = false) {
         $widthlr = (12 - $width) / 2;
         echo '<div class="container">'."\n";
         echo ' <div class="row row-offcanvas row-offcanvas-center">'."\n";
-        echo ' <div class="col-xs-12 col-sm-12 col-md-12"><h3 align="center">' . $tytle . '</h3></div>'."\n";
+        if (!empty($tytle)) {
+            echo ' <div class="col-xs-12 col-sm-12 col-md-12"><h3 align="center">' . $tytle . '</h3></div>'."\n";
+        }    
         echo ' <div class="col-xs-' . $widthlr . ' col-sm-' . $widthlr . ' col-md-' . $widthlr . '"></div>' . "\n";
         echo '  <div class="col-xs-' . $width . ' col-sm-' . $width . ' col-md-' . $width . '">' . "\n";
         echo '   <div class="panel panel-info">'."\n";
@@ -69,7 +71,9 @@ class cForm
         echo '     <form class="form-horizontal" action="" method="post" onSubmit="">'."\n";
         echo '     <input type="hidden" name="action" value="validate">'."\n";
         foreach ($fields as $key=>$field) {
-            echo '<div class="form-group row ' . ((!empty($field[6]))? 'has-error' : '') . '"' . ((mb_substr($field[7], 0, 6) == 'hidden') ? (' ' . $field[7]) : '') . '>'."\n";
+            if (!$stringOnly) {
+                 echo '<div class="form-group row"' . ((mb_substr($field[7], 0, 6) == 'hidden') ? (' ' . $field[7]) : '') . '>'."\n";
+            }     
             if(count($field[0]) > 1) {
                 $label = $field[0][0] . $field[0][1];
             } elseif(isset($field[0])) {
@@ -78,15 +82,21 @@ class cForm
                 $label = '';
             }    
             echo '<label for="' . $field[2] . '" class="col-sm-' . $field[1] . ' control-label">' . $label . '</label>'."\n";
-            echo '<div class="col-sm-' . $field[3] . '">'."\n";
+            echo '<div class="col-sm-' . $field[3] . '  ' . ((!empty($field[6]))? 'has-error' : '') . '">'."\n";
             if ($field[4] == 'textarea') {
                echo '<textarea name="body" class="form-control" rows="5" ' . $field[7] . '>' . $field[5] . '</textarea>'."\n";
             } else {    
-               echo '<input type="' . $field[4] . '" class="form-control" name="' . $field[2] . '" value="' . $field[5] . '" ' . $field[7] . (($key == 0) ? ' autofocus' : '') . '>'."\n";
+                if ($field[4] !== 'checkbox') {
+                    echo '<input type="' . $field[4] . '" class="form-control" name="' . $field[2] . '" value="' . $field[5] . '" ' . $field[7] . (($key == 0) ? ' autofocus' : '') . '>'."\n";
+                } else {
+                    echo '<input type="' . $field[4] . '" class="form-control" name="' . $field[2] . '" value="' . 'checked' . '" ' . $field[7] . (($key == 0) ? ' autofocus' : '') . ' ' . $field[5] . '>'."\n";
+                }
             }
             echo '<div class="help-block with-errors">' . $field[6] . '</div>'."\n";
             echo '</div>'."\n";
-            echo '</div>'."\n";
+            if (!$stringOnly) {
+                echo '</div>'."\n";
+            }    
         }
         echo '<div class="btn-toolbar" role="toolbar">'."\n";
         foreach ($buttons as $key=>$button) {
@@ -115,7 +125,9 @@ class cForm
         $widthlr = (12 - $width) / 2;
         echo '<div class="container">' . "\n";
         echo ' <div class="row row-offcanvas row-offcanvas-center">' . "\n";
-        echo ' <div class="col-xs-12 col-sm-12 col-md-12"><h3 align="center">' . $tytle . '</h3></div>' . "\n";
+        if (!empty($tytle)) {
+            echo ' <div class="col-xs-12 col-sm-12 col-md-12"><h3 align="center">' . $tytle . '</h3></div>' . "\n";
+        }
         echo ' <div class="col-xs-' . $widthlr . ' col-sm-' . $widthlr . ' col-md-' . $widthlr . '"></div>' . "\n";
         echo '  <div class="col-xs-' . $width . ' col-sm-' . $width . ' col-md-' . $width . '">' . "\n";
         echo '   <div class="panel panel-info">' . "\n";
@@ -123,12 +135,13 @@ class cForm
         echo $tytleform . "\n";
         echo '    </div>' . "\n";
         echo '    <div class="panel-body">' . "\n";
-
-        $this->bldPaginator($count_entrys, $entry_on_page, $current_page, $max_pages_list);
+        if ($max_pages_list > 0) {
+            $this->bldPaginator($count_entrys, $entry_on_page, $current_page, $max_pages_list);
+        }    
         if ($numup !== $numto) {
-            echo 'Строки с ' . $numup . ' по ' . $numto . ' всего ' . $count_entrys . "\n";
+            echo 'Строки с ' . $numup . ' по ' . $numto . ', всего ' . $count_entrys . "\n";
         } else {
-            echo 'Строка ' . $numup . ' всего ' . $count_entrys . "\n";
+            echo 'Строка ' . $numup . ', всего ' . $count_entrys . "\n";
         }
         echo '<table class="table table-striped table-bordered">' . "\n";
         echo '<thead>' . "\n";
