@@ -5,7 +5,7 @@ namespace sergechurkin\cform;
 class Captcha
 {
     public $dirtmp = './tmp/';           // Директория для каптчи
-    public $font = 'Caricaturista.ttf';  // Шрифт
+    public $font = './Caricaturista.ttf';  // Шрифт
     public $caplen = 5;                  // Кол.символов
     public $width = 120;                 // Ширина
     public $height = 20;                 // Длина

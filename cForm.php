@@ -6,6 +6,18 @@ class cForm
 {
     public $dircss = './css/';
 
+    private function bldButtons($buttons) {
+        echo '<div class="btn-toolbar">'."\n";
+        foreach ($buttons as $key=>$button) {
+            if ($button[1] !== 'submit') {
+                echo '<button type = "' . $button[1] . '" class = "' . $button[2] . '" onclick = "document.location.href=\'' . $button[3] . '\';">' . $button[0] . '</button>'."\n";
+            } else {
+                echo '<button type = "' . $button[1] . '" class = "' . $button[2] . '" >' . $button[0] . '</button>'."\n";
+            }
+        }
+        echo '</div>'."\n";
+    }
+    
     public function bldHeader($tytle) {
         echo '<!DOCTYPE html>' . "\n";
         echo '<html lang="ru">' . "\n";
@@ -98,15 +110,7 @@ class cForm
                 echo '</div>'."\n";
             }    
         }
-        echo '<div class="btn-toolbar" role="toolbar">'."\n";
-        foreach ($buttons as $key=>$button) {
-            if ($button[1] !== 'submit') {
-                echo '<button type = "' . $button[1] . '" class = "' . $button[2] . '" onclick = "document.location.href=\'' . $button[3] . '\';">' . $button[0] . '</button>'."\n";
-            } else {
-                echo '<button type = "' . $button[1] . '" class = "' . $button[2] . '" >' . $button[0] . '</button>'."\n";
-            }
-        }
-        echo '</div>'."\n";
+        $this->bldButtons($buttons);
         echo '     </form>'."\n";
         echo '    </div>'."\n";
         echo '   </div>'."\n";
@@ -135,14 +139,6 @@ class cForm
         echo $tytleform . "\n";
         echo '    </div>' . "\n";
         echo '    <div class="panel-body">' . "\n";
-        if ($max_pages_list > 0) {
-            $this->bldPaginator($count_entrys, $entry_on_page, $current_page, $max_pages_list);
-        }    
-        if ($numup !== $numto) {
-            echo 'Строки с ' . $numup . ' по ' . $numto . ', всего ' . $count_entrys . "\n";
-        } else {
-            echo 'Строка ' . $numup . ', всего ' . $count_entrys . "\n";
-        }
         echo '<table class="table table-striped table-bordered">' . "\n";
         echo '<thead>' . "\n";
         echo '<tr>' . "\n";
@@ -160,17 +156,23 @@ class cForm
             echo '</tr>' . "\n";
         }
         echo '</tbody>' . "\n";
-
+        echo '</table>' . "\n";
+        if ($numup !== $numto) {
+            echo 'Строки с ' . $numup . ' по ' . $numto . ', всего ' . $count_entrys . "\n";
+        } else {
+            echo 'Строка ' . $numup . ', всего ' . $count_entrys . "\n";
+        }
+        if ($max_pages_list > 0 && $count_entrys > $entry_on_page) {
+            $this->bldPaginator($count_entrys, $entry_on_page, $current_page, $max_pages_list);
+        }    
+        $this->bldButtons($buttons);
         echo '    </div>' . "\n";
         echo '   </div>' . "\n";
         echo '  </div>' . "\n";
         echo ' </div>' . "\n";
         echo '</div>' . "\n";
     }
-    /*
-     * $fields[]  = [['Имя', 'name',],...];
-     * $buttons[] = ['Отмена', 'button', 'btn btn-default', './'];
-     */
+
     public function bldPaginator($count_entrys, $entry_on_page, $current_page, $max_pages_list) {
         echo '<nav aria-label = "Page navigation">' . "\n";
         echo '<ul class = "pagination">' . "\n";
@@ -183,20 +185,24 @@ class cForm
             
         $count_pages = ceil($count_entrys / $entry_on_page);
         $first_page = $current_page - (int) ($max_pages_list / 2);
-        if ($first_page <= 1)
+        if ($first_page <= 1) {
             $first_page = 1;
+        }
         else {
             if ($count_pages - $first_page < $max_pages_list) {
                 $first_page = $count_pages - $max_pages_list + 1;
-                if ($first_page <= 1)
+                if ($first_page <= 1) {
                     $first_page = 1;
+                }    
             }
         }
         $last_page = $first_page + $max_pages_list - 1;
-        if ($last_page > $count_pages)
+        if ($last_page > $count_pages) {
             $last_page = $count_pages;
+        }
         for ($i = $first_page; $i <= $last_page; $i++) {
-            echo '<li ' . (($i == $current_page) ? 'class="active"' : '') . '><a href="' . './?current_page=' . $i . '">' . $i . '</a></li>' . "\n";
+            echo '<li ' . (($i == $current_page) ? 'class="active"' : '') .
+                 '><a href="' . './?current_page=' . $i . '">' . $i . '</a></li>' . "\n";
         }
         echo '<li>' . "\n";
         echo '<a href = "' . './?current_page=' . $count_pages . '" aria-label = "Next">' . "\n";
