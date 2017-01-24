@@ -1,8 +1,9 @@
 # cform
 
 Библиотека для формирования WEB страничек (меню, формы, таблицы). 
-Пример использования в тестовом приложении
-[Гостевая книга](https://github.com/sergechurkin/guestbook).
+Примеры использования в тестовых приложениях:
+[sergechurkin/guestbook](https://github.com/sergechurkin/guestbook),
+[sergechurkin/ratecb](https://github.com/sergechurkin/ratecb).
 Расширение зарегистрировано на
 [packagist](https://packagist.org/packages/sergechurkin/cform)
 и может быть включено в проект. Если указать зависимость
