@@ -10,7 +10,14 @@ class cForm
         echo '<div class="btn-toolbar">'."\n";
         foreach ($buttons as $key=>$button) {
             if ($button[1] !== 'submit') {
-                echo '<button type = "' . $button[1] . '" class = "' . $button[2] . '" onclick = "document.location.href=\'' . $button[3] . '\';">' . $button[0] . '</button>'."\n";
+                if (strripos($button[3], '/') !== false) {
+                    $txt = '"document.location.href=';
+                    $txt1 = '\'';
+                } else {
+                    $txt = '"';
+                    $txt1 = '';
+                }
+                echo '<button id="button' . $key . '" type = "' . $button[1] . '" class = "' . $button[2] . '" onclick=' . $txt . $txt1 . $button[3] . $txt1 . ';">' . $button[0] . '</button>'."\n";
             } else {
                 echo '<button type = "' . $button[1] . '" class = "' . $button[2] . '" >' . $button[0] . '</button>'."\n";
             }
@@ -29,7 +36,13 @@ class cForm
         echo '<body>' . "\n";
         
     }
-    public function bldFutter() {
+    public function bldFutter($txt = '') {
+        if ($txt !== '') {
+            echo '<p>'."\n";        
+            echo '<footer class="panel-footer navbar-fixed-bottom row-fluid">'."\n";
+            echo '<p class="text-muted">' . $txt . '</p>'."\n";
+            echo '</footer>'."\n";        
+        }    
         echo '</body>'."\n";
         echo '</html>'."\n";
     }
@@ -99,9 +112,9 @@ class cForm
                echo '<textarea name="body" class="form-control" rows="5" ' . $field[7] . '>' . $field[5] . '</textarea>'."\n";
             } else {    
                 if ($field[4] !== 'checkbox') {
-                    echo '<input type="' . $field[4] . '" class="form-control" name="' . $field[2] . '" value="' . $field[5] . '" ' . $field[7] . (($key == 0) ? ' autofocus' : '') . '>'."\n";
+                    echo '<input type="' . $field[4] . '" class="form-control" id="' . $field[2] . '" name="' . $field[2] . '" value="' . $field[5] . '" ' . $field[7] . (($key == 0) ? ' autofocus' : '') . '>'."\n";
                 } else {
-                    echo '<input type="' . $field[4] . '" class="form-control" name="' . $field[2] . '" value="' . 'checked' . '" ' . $field[7] . (($key == 0) ? ' autofocus' : '') . ' ' . $field[5] . '>'."\n";
+                    echo '<input type="' . $field[4] . '" class="form-control" id="' . $field[2] . '" name="' . $field[2] . '" value="' . 'checked' . '" ' . $field[7] . (($key == 0) ? ' autofocus' : '') . ' ' . $field[5] . '>'."\n";
                 }
             }
             echo '<div class="help-block with-errors">' . $field[6] . '</div>'."\n";
@@ -125,7 +138,11 @@ class cForm
      */
     public function bldTable($tytle, $tytleform, $width, $fields, $rows, $buttons, 
                              $count_entrys, $entry_on_page, $current_page, $max_pages_list,
-                             $numup, $numto) {
+                             $numup, $numto, $url = './?', $lsort = false, $sort = 0) {
+        if (empty($rows)) {
+            $this->bldMessage(2, 'Таблица пустая');
+            return;
+        }
         $widthlr = (12 - $width) / 2;
         echo '<div class="container">' . "\n";
         echo ' <div class="row row-offcanvas row-offcanvas-center">' . "\n";
@@ -143,7 +160,19 @@ class cForm
         echo '<thead>' . "\n";
         echo '<tr>' . "\n";
         foreach($fields as $key=>$field) {
-            echo '<th>' . $field[0] . '</th>' . "\n";
+            if (!$lsort) {
+                $txt1 = '';
+                $txt2 = '';
+            } else {
+                $url1 = $url . 'sort=' . $key;
+                $url2 = $url . 'sort=' . $sort;
+                $txt1 = '<a href="' . $url1 . '">';
+                $txt2 = '</a>';
+            }
+            echo '<th>' . $txt1 . $field . $txt2 . '</th>' . "\n";
+        }
+        if (isset($url2)) {
+            $url = $url2 . '&';
         }
         echo '</tr>' . "\n";
         echo '</thead>' . "\n";
@@ -163,7 +192,7 @@ class cForm
             echo 'Строка ' . $numup . ', всего ' . $count_entrys . "\n";
         }
         if ($max_pages_list > 0 && $count_entrys > $entry_on_page) {
-            $this->bldPaginator($count_entrys, $entry_on_page, $current_page, $max_pages_list);
+            $this->bldPaginator($count_entrys, $entry_on_page, $current_page, $max_pages_list, $url);
         }    
         $this->bldButtons($buttons);
         echo '    </div>' . "\n";
@@ -173,11 +202,11 @@ class cForm
         echo '</div>' . "\n";
     }
 
-    public function bldPaginator($count_entrys, $entry_on_page, $current_page, $max_pages_list) {
+    public function bldPaginator($count_entrys, $entry_on_page, $current_page, $max_pages_list, $url) {
         echo '<nav aria-label = "Page navigation">' . "\n";
         echo '<ul class = "pagination">' . "\n";
         echo '<li>' . "\n";
-        echo '<a href = "' . './?current_page=' . '1' . '" aria-label = "Previous">' . "\n";
+        echo '<a href = "' . $url . 'current_page=' . '1' . '" aria-label = "Previous">' . "\n";
         echo '<span aria-hidden = "true">&laquo;' . "\n";
         echo '</span>' . "\n";
         echo '</a>' . "\n";
@@ -202,15 +231,27 @@ class cForm
         }
         for ($i = $first_page; $i <= $last_page; $i++) {
             echo '<li ' . (($i == $current_page) ? 'class="active"' : '') .
-                 '><a href="' . './?current_page=' . $i . '">' . $i . '</a></li>' . "\n";
+                 '><a href="' . $url . 'current_page=' . $i . '">' . $i . '</a></li>' . "\n";
         }
         echo '<li>' . "\n";
-        echo '<a href = "' . './?current_page=' . $count_pages . '" aria-label = "Next">' . "\n";
+        echo '<a href = "' . $url . 'current_page=' . $count_pages . '" aria-label = "Next">' . "\n";
         echo '<span aria-hidden = "true">&raquo;' . "\n";
         echo '</span>' . "\n";
         echo '</a>' . "\n";
         echo '</li>' . "\n";
         echo '</ul>' . "\n";
         echo '</nav>' . "\n";
+    }
+    public function bldMessage($ntype, $txt) {
+        $ctype[0] = 'success';
+        $ctype[1] = 'warning';
+        $ctype[2] = 'danger';
+        echo '<div id="mess" class="alert alert-' . $ctype[$ntype] . '" onclick="document.getElementById(\'mess\').remove();">' . "\n";
+        echo '<a href="#" class="close" data-dismiss="alert">×</a>' . "\n";
+        echo $txt . "\n";
+        echo '</div>' . "\n";
+    }
+    public function bldImg($img) {
+        echo '<a class="logo" href="./" ><img alt="Схема БД" src="' . $img . '" title="Схема БД" /></a>' . "\n";
     }
 }
